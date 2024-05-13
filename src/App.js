@@ -27,6 +27,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/single-product/:id/:name" element={<SingleProduct />} />
+        <Route path="/shop/single-product/:id/:name" element={<SingleProduct />} />
         <Route path="/Sign-In" element={<Login />} />
         <Route path="/Sign-Up" element={<Register />} />
         <Route path="/Profile" element={<Profile />} />
@@ -38,7 +39,7 @@ function App() {
         <Route path="/Return-And-Refund-Policy" element={<ReturnRefundPolicy />} />
         <Route path="/Terms-And-Conditions" element={<TermsAndConditions />} />
         <Route path="/Payment-Status/:txn" element={<PaymentPage />} />
-        <Route path="/Women" element={<Women />} />
+        <Route path="/shop/:title" element={<Women />} />
         <Route path="/Shirt" element={<Shirt />} />
         <Route path="/Kids-collections" element={<Kids />} />
 
@@ -52,7 +53,7 @@ function App() {
 
 
 
-        <Route path="/shop" element={
+        {/* <Route path="/shop" element={
           <>
           <Shirt/>
           <Women/>
@@ -60,7 +61,7 @@ function App() {
             <NewArrival />
             <WeeksHighlight />
           </>
-        } />
+        } /> */}
 
 
 

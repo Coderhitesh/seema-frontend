@@ -1,16 +1,40 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './Header.css'
 import logo from './logosemaa.png'
 import { useSelector } from 'react-redux'
+import axios from 'axios';
 const Header = () => {
+    const [data,setData]=useState([])
     const [showMenu, setShowMenu] = useState(false)
+    const [isCategoryActive,setIsCategoryActive] = useState(false)
+    const categoryActive = () => {
+        setIsCategoryActive(!isCategoryActive)
+    }
+    const categoryDeActive = () => {
+        setIsCategoryActive(false)
+    }
     const handleToggle = () => {
         setShowMenu(!showMenu)
     }
     const handleClose = () => {
         setShowMenu(false)
     }
+
+    useEffect(()=>{
+        
+        const datafetch = async() => {
+            try {
+                const response = await axios.get('http://localhost:4234/api/get-category')
+                console.log(response.data.data)
+                setData(response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        datafetch()
+    },[])
+
     const cartItems = useSelector(state => state.cart);
     console.log(cartItems.items.length);
     const User = useSelector(state => state.register)
@@ -42,18 +66,31 @@ const Header = () => {
 
             </div>
             {/* no touchable */}
-            <div className='navbar flex items-center whitespace-nowrap  bg-white  shadow-md justify-between p-2 gap-2'>
-                <div className='navbar-brand py-4 w-32'>
+            <div className='navbar flex items-center whitespace-nowrap  bg-white  shadow-md justify-between h-[90px] px-2 gap-2'>
+                <div className='navbar-brand py-4 w-32 '>
                     <img src={logo} className='logo' alt="This is Seema Collections logo" />
                 </div>
-                <nav className={`${showMenu ? 'showNavBar' : ''}`}>
-                    <ul className='flex  md:items-center md:space-x-6'>
-                        <li onClick={handleClose} className='font-medium text-gray-900 text-lg '><Link to="/">Home</Link></li>
-                        <li onClick={handleClose} className='font-medium text-gray-900 text-lg '><Link to="/Shop">Shop</Link></li>
-                        <li onClick={handleClose} className='font-medium text-gray-900 text-lg '><Link to="/Women">Women</Link></li>
-                        <li onClick={handleClose} className='font-medium text-gray-900 text-lg '><Link to="/Shirt">Shirt</Link></li>
-                        <li onClick={handleClose} className='font-medium text-gray-900 text-lg '><Link to="/Kids-collections">Kids Collections</Link></li>
-                        <li onClick={handleClose} className='font-medium text-gray-900 text-lg '><Link to="/bestseNew Arrivalllers">New Arrival</Link></li>
+                <nav className={` h-full ${showMenu ? 'showNavBar' : ''}`}>
+                    <ul className='flex h-full items-center content-center  md:items-center md:space-x-6'>
+                        <li onClick={handleClose} className=' h-full flex items-center content-center font-medium text-gray-900 text-lg '><Link to="/">Home</Link></li>
+                        <li onMouseEnter={categoryActive} onMouseLeave={categoryDeActive} className=' h-full flex items-center content-center font-medium shop-parent text-gray-900 text-lg '>
+                            <Link to="">Kids</Link>
+                            <ul className={`shop-children ${isCategoryActive ? 'show-category' : ''}`}>
+                                {
+                                    data && data.map((item,index)=>(
+                                        <li key={index}><Link to={`/shop/${item.title}`}>{item.title}</Link></li>
+                                    ))
+                                }
+                            </ul>
+                        </li>
+                        <li onClick={handleClose} className=' h-full flex items-center content-center font-medium text-gray-900 text-lg '><Link to="/Kids-collections">Mens</Link></li>
+                        {/* <li onClick={handleClose} className=' h-full flex items-center content-center font-medium text-gray-900 text-lg '><Link to="/Women">Women</Link></li>
+                        <li onClick={handleClose} className=' h-full flex items-center content-center font-medium text-gray-900 text-lg '><Link to="/Shirt">Shirt</Link></li> */}
+                        {/* {
+                            data && data.map
+                        } */}
+                        <li onClick={handleClose} className=' h-full flex items-center content-center font-medium text-gray-900 text-lg '><Link to="/Kids-collections">Kids Collections</Link></li>
+                        <li onClick={handleClose} className=' h-full flex items-center content-center font-medium text-gray-900 text-lg '><Link to="/bestseNew Arrivalllers">New Arrival</Link></li>
                     </ul>
                 </nav>
                 <div className='btns-ctas smhidden space-x-4'>

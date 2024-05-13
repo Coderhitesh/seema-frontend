@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import './NewArrival.css'
 import QucikView from './QucikView'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
 
 import { fetchData } from '../../../store/slices/product.slice'
+import axios from 'axios';
 const Women = () => {
     const dispatch = useDispatch();
     const [showQuickView, setShowQucikView] = useState(false)
     const [items, setItems] = useState(false)
     const { data, status, error } = useSelector((state) => state.product);
-
+    const  [allData, setAllData]  = useState([]);
+    // console.log(allData)
 
     useEffect(() => {
         // Dispatch the fetchData thunk when the component mounts
@@ -27,6 +29,34 @@ const Women = () => {
     const handleClose = () => {
         setShowQucikView(false)
     }
+
+    const { title } = useParams()
+    console.log(title)
+
+    useEffect(() => {
+
+        const datafetch = async () => {
+            try {
+                const response = await axios.get('http://localhost:4234/api/get-products')
+                console.log(response.data.data)
+                // const data = response.data.data;
+                const filter = response.data.data.filter((filtItem) => filtItem.categories === title)
+                console.log(filter);
+                setAllData(filter);
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        datafetch()
+    },[title])
+
+    // console.log(allData)
+
+    // const filterData = allData.filter((item) => item.categories == title);
+
+    // console.log(filterData)
+
 
     const Data = [
         {
@@ -223,13 +253,15 @@ const Women = () => {
     return (
         <div className='w-full mt-12'>
             <div className='text-center py-2 md:py-5'>
+                {/* {
+                    allData && allData.map
+                } */}
                 <h1 className='md:text-3xl text-pretty mb-2 text-2xl font-bold'>Women Collection</h1>
                 {/* <p className='md:tracking-wide font-meduim text-base md:text-xl	'>Shop the trending products and most buy of the week</p> */}
             </div>
             <div className='mt-5 p-2'>
                 <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 space-x-3 gap-2'>
-                    {data && data.map((item, index) => (
-                         item.categories === "women" ||  item.categories === "Women" ? (
+                    {allData && allData.map((item, index) => (
                         <div className=' p-1 md:p-2' key={index}>
                             <div className='relative first-img '>
                                 <Link className='relative first-img' to={`/single-product/${item._id}/${item.productName}`}>
@@ -252,17 +284,15 @@ const Women = () => {
                                     </div>
                                 </div>
                                 {/* <h3 className='text-xl font-bold text-red-500'>
-                                    <del className='text-gray-300 font-thin'>{item.sizes[0].mainPrice}</del> {item.sizes[0].discountPrice}
-                                </h3> */}
+                                <del className='text-gray-300 font-thin'>{item.sizes[0].mainPrice}</del> {item.sizes[0].discountPrice}
+                            </h3> */}
                                 <div className='tag'>
                                     {item.percentage}%
                                 </div>
                             </div>
                         </div>
-                 
-                ):null
 
-            ))}
+                    ))}
                 </div>
             </div>
             <QucikView showQuickView={showQuickView} handleClose={handleClose} item={items} />

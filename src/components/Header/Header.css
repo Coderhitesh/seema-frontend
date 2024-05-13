@@ -34,6 +34,31 @@
     animation: anime1 30s linear infinite;
 }
 
+.shop-parent{
+    position: relative;
+}
+
+.shop-parent .shop-children{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    /* gap: 6px; */
+    padding: 0px 10px;
+    position: absolute;
+    top: -1000000000%;
+    left: 0%;
+    z-index: 9999999;
+    background-color: white;
+}
+
+.show-category{
+    top: 100% !important;
+}
+
+.shop-parent .shop-children li a:hover{
+    background-color: rgb(228, 228, 228);
+}
+
 @keyframes anime1 {
     0%{
         left: 0%;
